@@ -40,3 +40,9 @@ void I2C0_SEND(uint8_t PERIPHERAL_ADDRESS, uint8_t ANALOG_SAMPLE_MSB, uint8_t AN
     while (I2C0_MCS_R & 0x01);                            // Wait for transmission to finish
     if (I2C0_MCS_R & 0x02) return;                        // Return if error occurs
 }
+void systick_setting(void) {
+    STRELOAD = SYSTICK_RELOAD_VALUE(1000);                // Set reload value for 1ms delay
+    STCTRL |= ENABLE | CLKINT;                            // Enable SysTick with system clock
+    STCURRENT = 0;                                        // Clear current value register
+}
+
