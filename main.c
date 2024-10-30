@@ -28,3 +28,15 @@ void I2C0_init(void) {
     I2C0_MCR_R = 0x10;                                    // Initialize I2C0 master function
     I2C0_MTPR_R = 0x07;                                   // Set SCL clock frequency (based on 100kHz standard mode)
 }
+void I2C0_SEND(uint8_t PERIPHERAL_ADDRESS, uint8_t ANALOG_SAMPLE_MSB, uint8_t ANALOG_SAMPLE_LSB) {
+    I2C0_MSA_R = (PERIPHERAL_ADDRESS << 1);               // Set peripheral address, write mode
+    I2C0_MDR_R = ANALOG_SAMPLE_MSB;                       // Load MSB
+    I2C0_MCS_R = 0x03;                                    // Send Start + Run
+    while (I2C0_MCS_R & 0x01);                            // Wait for transmission to finish
+    if (I2C0_MCS_R & 0x02) return;                        // Return if error occurs
+
+    I2C0_MDR_R = ANALOG_SAMPLE_LSB;                       // Load LSB
+    I2C0_MCS_R = 0x05;                                    // Send Run + Stop
+    while (I2C0_MCS_R & 0x01);                            // Wait for transmission to finish
+    if (I2C0_MCS_R & 0x02) return;                        // Return if error occurs
+}
