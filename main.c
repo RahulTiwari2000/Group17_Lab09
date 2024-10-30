@@ -71,3 +71,19 @@ int samples[100] = {                                                       // De
      111,  140,  166,  189,  211,  235,  264,  303,  357,  431,
      528,  651,  800,  974, 1170, 1382, 1604, 1829, 2047, 2252
 };
+void WAVEFORM(void) {
+    while (1) {
+        int i=0;
+        for (i = 0; i < 100; i++) {                   // Loop through each sample
+            AOUT(samples[i]);                             // Output sample to DAC
+            delay(1000);                                  // Delay to control waveform frequency (1 ms per sample)
+        }
+    }
+}
+
+int main(void) {
+    I2C0_init();                                         // Initialize I2C on Port A
+    systick_setting();                                   // Setup SysTick for delays
+    WAVEFORM();                                          // Generate waveform
+    while (1);
+}
