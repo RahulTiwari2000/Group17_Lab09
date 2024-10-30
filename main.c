@@ -45,4 +45,10 @@ void systick_setting(void) {
     STCTRL |= ENABLE | CLKINT;                            // Enable SysTick with system clock
     STCURRENT = 0;                                        // Clear current value register
 }
-
+void delay(int us) {
+    STRELOAD = SYSTICK_RELOAD_VALUE(us);                  // Set reload value for required delay
+    STCURRENT = 0;                                        // Clear current value register
+    STCTRL |= ENABLE | CLKINT;                            // Enable SysTick with system clock
+    while ((STCTRL & (1 << 16)) == 0);                    // Wait for flag to set
+    STCTRL &= ~ENABLE;                                    // Stop timer
+}
